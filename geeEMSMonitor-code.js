@@ -94,7 +94,8 @@ var infoFontindex = {fontSize: '11px', color: '#505050', whiteSpace: 'pre', back
 // Button
 var buttonStyle = {fontSize: '18px', fontWeight: 'bold', margin: '4px 8px 0px 8px', stretch: 'horizontal', textAlign: 'center'};
 // Hyperlinks
-var linkstyleexternal = {fontSize: '12px',  textAlign: 'justify',  padding: '8px',  margin: '0px',  color: 'darkblue', backgroundColor: colorexternal};
+var linkstyleexternal = {fontSize: '12px',  textAlign: 'justify',  padding: '8px',  margin: '0px',  backgroundColor: colorexternal};
+var githublink = {fontSize: '16px', margin: '4px 8px 0px 8px', stretch: 'horizontal', textAlign: 'center'};
 
 
 // PANEL
@@ -203,8 +204,11 @@ var appname = ui.Label(
   titelFont);
   
 // Info Button
-var infobutton = ui.Button({
-  label: 'About this App (GitHub Wiki)', style: buttonStyle
+var infobutton = ui.Label({
+  value: 'About this App (GitHub Wiki)', style: githublink, targetUrl: 'https://github.com/prenner-eo/EMSAfricaMonitor/wiki'
+});
+var sourcebutton = ui.Label({
+  value: 'Source Code (GitHub)', style: githublink, targetUrl: 'https://github.com/prenner-eo/EMSAfricaMonitor/blob/main/geeEMSMonitor-code.js'
 });
   
 var infoIndices = ui.Label(
@@ -728,6 +732,7 @@ settingPanel.add(headPanel);
 settingPanel.add(yearPanel);
 settingPanel.add(indicesPanel);
 settingPanel.add(externaldata);
+settingPanel.add(sourcebutton);
 
 map.onClick(handleMapClick);
 submitbutton.onClick(handleSubmit);
