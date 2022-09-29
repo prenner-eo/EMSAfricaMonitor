@@ -22,6 +22,7 @@
     as part of EMSAfrica within SPACES II.
 */
 
+
 // #################################
 // ########## IMPORT      ##########
 // #################################
@@ -223,10 +224,17 @@ var sourceinfo = ui.Label({
   value: 'This GEE App was created by\nPaul Renner (FSU Jena) &\nKai Heckel (FSU Jena, Supervision)\nto contribute to the SPACES II project EMSAfrica.',
   style: infoFont
 });
-var sourcebutton = ui.Label({
+var sourcebutton1 = ui.Label({
   value: 'Source Code (GitHub)', style: githublink, targetUrl: 'https://github.com/prenner-eo/EMSAfricaMonitor/blob/main/geeEMSMonitor-code.js'
 });
-  
+var sourcebutton2 = ui.Label({
+  value: 'Source Code (GEE Editor)', style: githublink, targetUrl: 'https://code.earthengine.google.com/4554dbc236b75b9284809e12e2ee3f09'
+});
+var sourcebutton = ui.Panel({
+  widgets: [sourcebutton1, sourcebutton2],
+  layout: ui.Panel.Layout.flow('horizontal', true)
+});
+
 var infoIndices = ui.Label(
   indices[ui.url.get('index')][3],
   infoFontindex);
