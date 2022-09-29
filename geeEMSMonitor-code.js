@@ -1,4 +1,4 @@
-  /*
+/*
     Google Earth Engine App for EMSAfrica
     
     Created by Paul Renner 2022
@@ -11,6 +11,9 @@
     Multiple Contributors (2020): Image mosaic/composite creation for Landsat and Sentinel-2 in Google Earth Engine - Cloudmask
     (https://open-mrv.readthedocs.io/en/latest/image_composite_Web.html)
     
+    Principe, Rodrigo E. (2019): GEEtools-code-editor Tools
+    (https://github.com/fitoprincipe/geetools-code-editor/blob/51fa835dfaabe73fa238fe1f3ce0c98118ded244/_tools/map)
+    
     Staridas Geography (2020): Hillshade
     (https://code.earthengine.google.com/d136f0a45cee76a89ed45384dc376793 from https://www.staridasgeography.gr/)
     
@@ -18,8 +21,9 @@
     Funded by the Federal Ministry of Education and Research (BMBF)
     as part of EMSAfrica within SPACES II.
 */
+
 // #################################
-// ########## IMPORT   #############
+// ########## IMPORT      ##########
 // #################################
 
 var s2sr = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
@@ -344,7 +348,7 @@ var infotextslider = ui.Label({
 var infotextchart = ui.Label({
   value: '\n\n\n\n Here the index chart will be displayed once you click the submit years button or click the map.',
   style: textFont
-})
+});
 var infotextgallery = ui.Label({
   value: "Here the gallery view will be displayed once you click the submit years button or click the map.\n\n\n\nHow to use the EMSAfrica Monitor?\n\nClick on the map to define your point of interest.\nDefine the years you are interested in.\nChoose an index from the list.\nYou can also view EMSAfrica products and external datasets.",
   style: textFont
@@ -437,7 +441,7 @@ function monthlycomposite(region,years,months) {
   });
 }).flatten());
 
-  return monthlyImages
+  return monthlyImages;
 }
 
 // Source: https://open-mrv.readthedocs.io/en/latest/image_composite_Web.html
@@ -466,7 +470,7 @@ function maskS2srCloudsgallery(image) {
   var mask = qa.bitwiseAnd(cloudBitMask).eq(0)
       .and(qa.bitwiseAnd(cirrusBitMask).eq(0));
 
-  return image.updateMask(mask)
+  return image.updateMask(mask);
 }
 
 // print('Sentinel-2 Filtered collection',s2Filt);
@@ -561,7 +565,7 @@ function removeAllLayer(){
   removeLayerByName('Tree Cover 2020 250m',map);
   removeLayerByName('Ecoregions 2017 250m',map);
   removeLayerByName('Human settlement areas 2015 10m',map);
-  removeLayerByName('Background (Human settlement areas 2015)',map)
+  removeLayerByName('Background (Human settlement areas 2015)',map);
 }
 // ROI Points and AOI Circle Define by Map Click Function
 // modified from Braaten 2021
@@ -572,7 +576,7 @@ function renderGraphics(coords,years,months,visParams) {
   var aoiBox = point.buffer(500);
   
   // Clear previous point from the Map.
-  removePoint()
+  removePoint();
   
   var endDate = ee.Date(Date.now());
   var startDate = endDate.advance(-1, 'month');
@@ -609,7 +613,7 @@ function renderGraphics(coords,years,months,visParams) {
     });
     // Color Gradient
     var rgbColors = 'palette:["C4022F","FF7847","F7FFAD","8BCC68","066634"]';
-    rgbColors = rgbColors.slice(8)
+    rgbColors = rgbColors.slice(8);
     //print(rgbColors)
     
     // Design Chart
@@ -708,7 +712,7 @@ var legendTitle = ui.Label({
 // eARTh Engine: Turn cold pixels to a colorful Terrain
 // https://code.earthengine.google.com/d136f0a45cee76a89ed45384dc376793
 
-function dmcshade (image){
+function demshade (image){
   var N = ee.Terrain.hillshade(image,0,36).multiply(0);
   var NE = ee.Terrain.hillshade(image,45,44).multiply(0);
   var E = ee.Terrain.hillshade(image,90,56).multiply(0);
@@ -751,7 +755,7 @@ function dmcshade (image){
                       .mosaic()
                       .reduce(ee.Reducer.median())
                       .updateMask(1);
-  return SHADED_RELIEF
+  return SHADED_RELIEF;
 }
 
 var SURFACE_WATER = GSWM
@@ -823,31 +827,31 @@ function adddmclegend(){
   legendPanel.clear();
   // Add the legendPanel to the map
   legendPanel.add(legendTitle);
-  legendPanel.add(dmcLegendLabel)
+  legendPanel.add(dmcLegendLabel);
   legendPanel.add(colorBar);
   legendPanel.add(legendLabels);
 }
 
 function insertdsm(){
-  removeAllLayer()
-  removePoint()
-  galleryPanel.clear()
-  chartPanel.clear()
-  adddmclegend()
+  removeAllLayer();
+  removePoint();
+  galleryPanel.clear();
+  chartPanel.clear();
+  adddmclegend();
   map.centerObject(knparea);                                    //ToDo: if Point is not in KNP center KNP else do nothing
-  var dsm1mshade = dmcshade(dsm1m).clip(knparea);
+  var dsm1mshade = demshade(dsm1m).clip(knparea);
   map.addLayer(dsm1mshade, null, 'Hillshade DSM 1m');
   map.addLayer(dsm1m.resample('bicubic').clip(knparea), visdmc, 'Elevation DSM 1m', null, 0.5);
   map.addLayer(SURFACE_WATER, null, 'Surface Water');
 }
 function insertdtm(){                                           //ToDo: if Point is not in KNP center KNP else do nothing
-  removeAllLayer()
-  removePoint()
-  galleryPanel.clear()
-  chartPanel.clear()
-  adddmclegend()
+  removeAllLayer();
+  removePoint();
+  galleryPanel.clear();
+  chartPanel.clear();
+  adddmclegend();
   map.centerObject(knparea);
-  var dtm1mshade = dmcshade(dtm1m).clip(knparea);
+  var dtm1mshade = demshade(dtm1m).clip(knparea);
   map.addLayer(dtm1mshade, null, 'Hillshade DTM 1m');
   map.addLayer(dtm1m.resample('bicubic').clip(knparea), visdmc, 'Elevation DTM 1m', null, 0.5);
   map.addLayer(SURFACE_WATER, null, 'Surface Water');
@@ -907,7 +911,7 @@ var visualization = {
   palette: ['ffffff', '61D10A', '074b03']
 };
 
-removeAllLayer()
+removeAllLayer();
 map.addLayer(dataset, visualization, 'Tree Cover 2020 250m');
 
   var TerraVegLegendLabel = ui.Label({
@@ -963,7 +967,7 @@ var colorUpdates = [
 
 // loop over all other features and create a new style property for styling
 // later on
-var ecoRegions = ecoRegions.map(function(f) {
+ecoRegions = ecoRegions.map(function(f) {
   var color = f.get('COLOR');
   return f.set({style: {color: color, width: 0}});
 });
@@ -985,7 +989,7 @@ for (var i=0; i < colorUpdates.length; i++) {
 // use style property to color shapes
 var imageRGB = ecoRegions.style({styleProperty: 'style'});
 legendPanel.clear();
-removeAllLayer()
+removeAllLayer();
 map.addLayer(imageRGB, {}, 'Ecoregions 2017 250m');
 }
 // World Settlement Footprint 2015
@@ -1024,14 +1028,63 @@ var visualization = {
 map.addLayer(dataset, visualization, "Human settlement areas 2015 10m");
 }
 // SRTM
+var vissrtm = {
+  min: -100,
+  max: 3000,
+  palette: ['0000ff', '00ffff', 'ffff00', 'ff0000'],
+};
+
+function addsrtmlegend(){
+  // Create Legend for DMC
+  var dempalette = ['0000ff', '00ffff', 'ffff00', 'ff0000'];
+  var visdem = {min: -100, max: 3000, palette: dempalette};
+  // Create the colour bar for the legend
+  var colorBar = ui.Thumbnail({
+    image: ee.Image.pixelLonLat().select(0),
+    params: makeColorBarParams(visdem.palette),
+    style: {stretch: 'horizontal', margin: '0px 8px', maxHeight: '24px'},
+  });
+  // Create a panel with three numbers for the legend
+  var legendLabels = ui.Panel({
+    widgets: [
+      ui.Label(visdem.min, {margin: '4px 8px'}),
+      ui.Label(
+        ((visdem.max-visdem.min) / 2+visdem.min),
+        {margin: '4px 8px', textAlign: 'center', stretch: 'horizontal'}),
+      ui.Label(visdem.max, {margin: '4px 8px'})
+    ],
+    layout: ui.Panel.Layout.flow('horizontal')
+  });
+  // Legend title
+  var demLegendLabel = ui.Label({
+    value: 'Elevation [in Meter]',
+    style:{ fontSize: '12px',
+      margin: '0px;'
+  }});
+  var legendTitle = ui.Label({
+  value: 'Legend',
+  style: {
+    fontSize: '14px',
+    fontWeight: 'bold',
+    margin: '0px;'
+  }
+  });
+  legendPanel.clear();
+  // Add the legendPanel to the map
+  legendPanel.add(legendTitle);
+  legendPanel.add(demLegendLabel);
+  legendPanel.add(colorBar);
+  legendPanel.add(legendLabels);
+}
+
 function insertSRTM(){
   var srtmdata = ee.Image("CGIAR/SRTM90_V4");
-  removeAllLayer()
-  removePoint()
-  adddmclegend()
-  var srtmshade = dmcshade(srtmdata);
+  removeAllLayer();
+  removePoint();
+  addsrtmlegend();
+  var srtmshade = demshade(srtmdata);
   map.addLayer(srtmshade, null, 'Hillshade DTM 1m');
-  map.addLayer(srtmdata.resample('bicubic'), visdmc, 'SRTM Digital Elevation Model', null, 0.5);
+  map.addLayer(srtmdata.resample('bicubic'), vissrtm, 'SRTM Digital Elevation Model', null, 0.5);
   map.addLayer(SURFACE_WATER, null, 'Surface Water');
 }
 
