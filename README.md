@@ -1,7 +1,7 @@
 # EMSAfricaMonitor
 
 The EMSAfricaMonitor is a Google Earth Engine app. <br>
-It's aim is to provide easy-to-understand information on a point of interest for decision-making.
+Its aim is to provide easy-to-understand information on a point of interest for decision-making.
 
 The app is provided under: https://prenner-eo.users.earthengine.app/view/eeemsafricaapp
 
