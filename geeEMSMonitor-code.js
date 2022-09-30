@@ -94,14 +94,14 @@ var textFontcenter = {fontSize: '12px', whiteSpace: 'pre', textAlign: 'center'};
 var textFontyear = {fontSize: '12px', backgroundColor: coloryear, whiteSpace: 'pre', margin: '0px 8px 0px 8px'};
 var textFontexternal = {fontSize: '12px', backgroundColor: colorexternal, whiteSpace: 'pre', margin: '0px 8px 2px 8px'};
 // Info
-var infoFontyear = {fontSize: '11px', color: '#505050', backgroundColor: coloryear};
-var infoFonttext = {fontSize: '11px', color: '#505050', margin:'0px 16px 0px 16px'};
-var infoFontindex = {fontSize: '12px'};
-var infoFont = {fontSize: '11px', color: '#505050', whiteSpace: 'pre'};
+var infoFontyear = {fontSize: '12px', backgroundColor: coloryear, textAlign: 'justify'};
+var infoFonttext = {fontSize: '12px', margin:'0px 16px 0px 16px', textAlign: 'justify'};
+var infoFontindex = {fontSize: '12px', textAlign: 'justify'};
+var infoFont = {fontSize: '12px', whiteSpace: 'pre', textAlign: 'justify'};
 // Button
 var buttonStyle = {fontSize: '18px', fontWeight: 'bold', margin: '4px 8px 4px 8px', stretch: 'horizontal', textAlign: 'center'};
 // Hyperlinks
-var linkstyleexternal = {fontSize: '12px', stretch: 'horizontal', textAlign: 'center',  margin: '0px 8px 6px 8px',  color: 'darkblue', backgroundColor: colorexternal};
+var linkstyleexternal = {fontSize: '12px', stretch: 'horizontal',  margin: '0px 8px 10px 8px',  color: 'darkblue', backgroundColor: colorexternal};
 var githubwikilink = {fontSize: '16px', margin: '4px 8px 8px 8px', stretch: 'horizontal', color: 'darkblue', textAlign: 'center'};
 var githublink = {fontSize: '12px', margin: '4px 8px 8px 8px', stretch: 'horizontal', color: 'darkblue', textAlign: 'center'};
 
@@ -302,9 +302,9 @@ var emsdataheadline = ui.Label({
   style: headerFontexternal});
 // DMC
 var linkdmc = ui.Label('More information in the related publication.', linkstyleexternal,'https://koedoe.co.za/index.php/koedoe/article/view/1679/2919');
-var linkdmcdownload = ui.Label('Download the Data here.', linkstyleexternal,'http://dx.doi.org/10.5285/deab4235f1ef4cd79b73d0cbf2655bd7');
+var linkdmcdownload = ui.Label('Download the data here.', linkstyleexternal,'http://dx.doi.org/10.5285/deab4235f1ef4cd79b73d0cbf2655bd7');
 
-var headdmc = ui.Label('Digital Mapping Camera (DMC) Products\n(Only available for Kruger National Park, SA)\nwith 1 meter resolution:', textFontexternal);
+var headdmc = ui.Label('Digital Mapping Camera (DMC) Products\n(only available for Kruger National Park, SA)\nwith 1 meter resolution:', textFontexternal);
 
 var button2 = ui.Button({
   label: 'DMC Digital Surface Model (DSM)', style: buttonStyle
@@ -315,34 +315,34 @@ var button3 = ui.Button({
 
 // EXTERNAL DATA
 var externalheadline = ui.Label({
-  value: 'External Data to add to the map:',
+  value: 'External data to add to the map:',
   style: headerFontexternal});
 // ESA World Cover
-var headesaworldcover = ui.Label('Landcover Product 2020 10m (ESA):', textFontexternal);
+var headesaworldcover = ui.Label('Landcover Product 2020 10m (ESA)', textFontexternal);
 var buttonesaworldcover = ui.Button({
   label: 'World Cover', style: buttonStyle
 });
 var sourceesaworldcover = ui.Label('Source: ESA 2020' ,linkstyleexternal, 'https://esa-worldcover.org/en');
 // Terra Vegetation Continuous Fields Yearly Global 250m
-var headTerraVeg = ui.Label('Tree Cover 2020 250m (Terra MODIS):', textFontexternal);
+var headTerraVeg = ui.Label('Tree Cover 2020 250m (Terra MODIS)', textFontexternal);
 var buttonTerraVeg = ui.Button({
   label: 'Tree Cover', style: buttonStyle
 });
 var sourceTerraVeg = ui.Label('Source: NASA 2020',linkstyleexternal, 'https://lpdaac.usgs.gov/products/mod44bv006/');
 // RESOLVE Ecoregions 2017
-var headEcoregion = ui.Label('Ecoregions 2017 (Resolve):', textFontexternal);
+var headEcoregion = ui.Label('Ecoregions 2017 (Resolve)', textFontexternal);
 var buttonEcoregion = ui.Button({
   label: 'Ecoregions', style: buttonStyle
 });
 var sourceEcoregion = ui.Label('Source: Resolve (2017)',linkstyleexternal, 'https://ecoregions.appspot.com/');
 // World Settlement Footprint 2015
-var headSettlement = ui.Label('World Settlement Footprint 2015 10m (DLR):', textFontexternal);
+var headSettlement = ui.Label('World Settlement Footprint 2015 10m (DLR)', textFontexternal);
 var buttonSettlement = ui.Button({
   label: 'World Settlement Footprint', style: buttonStyle
 });
 var sourceSettlement = ui.Label('Source: DLR (2020)',linkstyleexternal, 'https://www.dlr.de/blogs/en/all-blog-posts/world-settlement-footprint-where-do-humans-live.aspx');
 // SRTM
-var headSRTM = ui.Label('SRTM Digital Elevation Model 2000 30m (NASA):', textFontexternal);
+var headSRTM = ui.Label('SRTM Digital Elevation Model 2000 30m (NASA)', textFontexternal);
 var buttonSRTM = ui.Button({
   label: 'SRTM DEM', style: buttonStyle
 });
@@ -574,6 +574,9 @@ function removeAllLayer(){
   removeLayerByName('Ecoregions 2017 250m',map);
   removeLayerByName('Human settlement areas 2015 10m',map);
   removeLayerByName('Background (Human settlement areas 2015)',map);
+  removeLayerByName('SRTM Digital Elevation Model', map);
+  removeLayerByName('Hillshade', map);
+  removeLayerByName('Surface Water', map);
 }
 // ROI Points and AOI Circle Define by Map Click Function
 // modified from Braaten 2021
@@ -1091,7 +1094,7 @@ function insertSRTM(){
   removePoint();
   addsrtmlegend();
   var srtmshade = demshade(srtmdata);
-  map.addLayer(srtmshade, null, 'Hillshade DTM 1m');
+  map.addLayer(srtmshade, null, 'Hillshade');
   map.addLayer(srtmdata.resample('bicubic'), vissrtm, 'SRTM Digital Elevation Model', null, 0.5);
   map.addLayer(SURFACE_WATER, null, 'Surface Water');
 }
