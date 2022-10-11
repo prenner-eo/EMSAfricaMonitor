@@ -323,6 +323,12 @@ var buttonesaworldcover = ui.Button({
   label: 'World Cover', style: buttonStyle
 });
 var sourceesaworldcover = ui.Label('Source: ESA 2020' ,linkstyleexternal, 'https://esa-worldcover.org/en');
+// South African National Land Cover
+var headsanlc = ui.Label('South African National Land Cover 2018 (DFFE, South Africa)', textFontexternal);
+var buttonsanlc = ui.Button({
+  label: 'South African Land Cover', style: buttonStyle
+});
+var sourcesanlc = ui.Label('Source: DFFE, South Africa 2018' ,linkstyleexternal, 'https://www.dffe.gov.za/projectsprogrammes/egis_landcover_datasets');
 // Terra Vegetation Continuous Fields Yearly Global 250m
 var headTerraVeg = ui.Label('Tree Cover 2020 250m (Terra MODIS)', textFontexternal);
 var buttonTerraVeg = ui.Button({
@@ -577,6 +583,7 @@ function removeAllLayer(){
   removeLayerByName('SRTM Digital Elevation Model', map);
   removeLayerByName('Hillshade', map);
   removeLayerByName('Surface Water', map);
+  removeLayerByName('South African National Land Cover 2018', map);
 }
 // ROI Points and AOI Circle Define by Map Click Function
 // modified from Braaten 2021
@@ -705,7 +712,8 @@ function handleSubmit(){
 var legendPanel = ui.Panel({
   style: {
     position: 'bottom-left',
-    padding: '5px;'
+    padding: '5px;',
+    maxHeight: '30%'
   }
 });
 var legendTitle = ui.Label({
@@ -911,6 +919,83 @@ function insertesaworldcover(){
   }
 }
 
+// South African National Land Cover
+function insertSanlc(){
+  var sa_nlc2018 = ee.Image("projects/sat-io/open-datasets/landcover/SA_NLC_2018");
+  var dictsanlc = {"names": ["Contiguous (indigenous) Forest (combined very high, high, medium)", "Contiguous Low Forest & Thicket (combined classes)", "Dense Forest & Woodland (35 - 75% cc)", "Open Woodland (10 - 35% cc)", "Contiguous & Dense Planted Forest (combined classes)", "Open & Sparse Planted Forest", "Temporary Unplanted Forest", "Low Shrubland (other regions)", "Low Shrubland (Fynbos)", "Low Shrubland (Succulent Karoo)", "Low Shrubland (Nama Karoo)", "Sparsely Wooded Grassland (5 - 10% cc)", "Natural Grassland", "Natural Rivers", "Natural Estuaries & Lagoons", "Natural Ocean, Coastal", "Natural Lakes", "Natural Pans (flooded @ obsv time)", "Artificial Dams (incl. canals)", "Artificial Sewage Ponds", "Artificial Flooded Mine Pits", "Herbaceous Wetlands (currently mapped)", "Herbaceous Wetlands (previous mapped extent)", "Mangrove Wetlands", "Natural Rock Surfaces", "Dry Pans", "Eroded Lands", "Sand Dunes (terrestrial)", "Coastal Sand Dunes & Beach Sand", "Bare Riverbed Material", "Other Bare", "Cultivated Commercial Permanent Orchards", "Cultivated Commercial Permanent Vines", "Cultivated Commercial Sugarcane Pivot Irrigated", "Commercial Permanent Pineapples", "Cultivated Commercial Sugarcane Non-Pivot (all other)", "Cultivated Emerging Farmer Sugarcane Non-Pivot (all other)", "Commercial Annuals Pivot Irrigated", "Commercial Annuals Non-Pivot Irrigated", "Commercial Annuals Crops Rain-Fed / Dryland / Non-Irrigated", "Subsistence / Small-Scale Annual Crops", "Fallow Land & Old Fields (Trees)", "Fallow Land & Old Fields (Bush)", "Fallow Land & Old Fields (Grass)", "Fallow Land & Old Fields (Bare)", "Fallow Land & Old Fields (Low Shrub)", "Residential Formal (Tree)", "Residential Formal (Bush)", "Residential Formal (low veg / grass)", "Residential Formal (Bare)", "Residential Informal (Tree)", "Residential Informal (Bush)", "Residential Informal (low veg / grass)", "Residential Informal (Bare)", "Village Scattered (bare only)", "Village Dense (bare only)", "Smallholdings (Tree)", "Smallholdings (Bush)", "Smallholdings (low veg / grass)", "Smallholdings (Bare)", "Urban Recreational Fields (Tree)", "Urban Recreational Fields (Bush)", "Urban Recreational Fields (Grass)", "Urban Recreational Fields (Bare)", "Commercial", "Industrial", "Roads & Rail (Major Linear)", "Mines: Surface Infrastructure", "Mines: Extraction Sites: Open Cast & Quarries combined", "Mines: Extraction Sites: Salt Mines", "Mines: Waste (Tailings) & Resource Dumps", "Land-fills", "Fallow Land & Old Fields (wetlands)"], "colors": ["#F2F2F2", "#065106", "#005F00", "#008500", "#F74006", "#F9764D", "#F9906C", "#B8ABD1", "#8FAB39", "#AC92C5", "#AC9CDA", "#85D285", "#D2B485", "#00009F", "#041FA7", "#0639AB", "#0D50AC", "#125FAC", "#1373B4", "#1D81B6", "#1F8EB8", "#06DEDC", "#06E0D0", "#9F1FEC", "#ffffe0", "#DCDAC5", "#F9E0E0", "#F9F9C5", "#F9F9A7", "#CDD2E0", "#ffffe0", "#A62C39", "#B31F5C", "#DB0000", "#9F3978", "#FF0000", "#F64D6C", "#381A12", "#521F1C", "#85402C", "#C5735F", "#C1436C", "#C55E82", "#D27592", "#E0AAB8", "#DB90A9", "#ECDB0F", "#F6EC13", "#F9F81F", "#FFFF29", "#EC82EC", "#F691E0", "#F99FCF", "#FFC5CF", "#ECC500", "#FFD91F", "#AC7879", "#B89192", "#C49C9E", "#D2B8B8", "#BFFF00", "#33FF33", "#66FF66", "#99FF99", "#C49F0D", "#8F8506", "#F9DD03", "#FFFF00", "#B30606", "#C50606", "#D21D1A", "#F95479", "#6CE7DC"]}
+
+  // Create a panel to hold the legend widget 
+  var legend = ui.Panel({
+    style: {
+      position: 'bottom-left',
+      padding: '8px 15px',
+      height: '50%',
+    }
+  });
+
+  // Function to generate the legend Source Code: https://code.earthengine.google.com/?scriptPath=users%2Fsat-io%2Fawesome-gee-catalog-examples%3Aregional-landuse-landcover%2FSOUTH-AFRICA-LULC
+  function addCategoricalLegend(panel, dictsanlc, title) {
+  
+    // Create and add the legend title.
+    var legendTitle = ui.Label({
+      value: title,
+      style: {
+        fontWeight: 'bold',
+        fontSize: '12px',
+        margin: '0 0 4px 0',
+        padding: '0'
+      }
+    });
+    panel.add(legendTitle);
+  
+    var loading = ui.Label('Loading legend...', {margin: '2px 0 4px 0'});
+    panel.add(loading);
+  
+    // Creates and styles 1 row of the legend.
+    var makeRow = function(color, name) {
+      // Create the label that is actually the colored box.
+      var colorBox = ui.Label({
+        style: {
+          backgroundColor: color,
+          // Use padding to give the box height and width.
+          padding: '8px',
+          margin: '0 0 4px 0'
+        }
+      });
+  
+      // Create the label filled with the description text.
+      var description = ui.Label({
+        value: name,
+        style: {margin: '0 0 2px 3px'}
+      });
+  
+      return ui.Panel({
+        widgets: [colorBox, description],
+        layout: ui.Panel.Layout.Flow('horizontal')
+      });
+    };
+  
+    // Get the list of palette colors and class names from the image.
+    var palette = dictsanlc['colors'];
+    var names = dictsanlc['names'];
+    loading.style().set('shown', false);
+  
+    for (var i = 0; i < names.length; i++) {
+      panel.add(makeRow(palette[i], names[i]));
+    }
+  
+    //map.add(panel);
+  
+  }
+// Add the legend to the map
+legendPanel.clear();
+addCategoricalLegend(legendPanel, dictsanlc, 'South African National Land Cover 2018');
+
+// Add USDM Image image to the map
+removeAllLayer()
+map.addLayer(sa_nlc2018, {min:1, max:73, palette:dictsanlc['colors']}, 'South African National Land Cover 2018')
+}
+
 // Terra Vegetation Continuous Fields Yearly Global 250m
 function insertTerraVeg(){
   var dataset = ee.ImageCollection('MODIS/006/MOD44B');
@@ -1102,6 +1187,7 @@ function insertSRTM(){
 
 // Link Funcitons to Buttons
 buttonesaworldcover.onClick(insertesaworldcover);
+buttonsanlc.onClick(insertSanlc);
 buttonTerraVeg.onClick(insertTerraVeg);
 buttonEcoregion.onClick(insertEcoregion);
 buttonSettlement.onClick(insertSettlement);
@@ -1142,6 +1228,10 @@ externaldata.add(externalheadline);
 externaldata.add(headesaworldcover);
 externaldata.add(buttonesaworldcover);
 externaldata.add(sourceesaworldcover);
+
+externaldata.add(headsanlc);
+externaldata.add(buttonsanlc);
+externaldata.add(sourcesanlc);
 
 externaldata.add(headTerraVeg);
 externaldata.add(buttonTerraVeg);
